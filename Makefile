@@ -17,11 +17,13 @@ stop:
 clean: stop
 	$(DOWN)
 
-wipeout: 
+wipeout:
 	-docker stop $$(docker ps -q)
 	-docker system prune --all --force
-	-docker volume prune --all --force
-	-docker volume rm $$(docker volume ls -q)
+	-docker volume prune --force
+	@if [ -n "$$(docker volume ls -q)" ]; then \
+		docker volume rm $$(docker volume ls -q); \
+	fi
 
 re: clean all	
 
