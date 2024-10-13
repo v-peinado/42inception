@@ -1,6 +1,6 @@
 FROM	debian:bullseye
 
-RUN		apt-get update && apt-get upgrade
+RUN		apt-get update && apt-get upgrade -y
 RUN		apt-get install -y curl php7.4 \
 		php7.4-fpm php7.4-mysqli mariadb-client
 
