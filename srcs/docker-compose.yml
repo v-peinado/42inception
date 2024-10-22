@@ -1,69 +1,74 @@
-version: '3'
-
-
+# Definición de redes en el proyecto
 networks:
+  # Nombre de la red que se utilizará para conectar los servicios
   inception:
-    name: inception
-    driver: bridge
-    
+    name: inception  # Nombre amigable para la red
+    driver: bridge    # Tipo de driver de la red, en este caso 'bridge'
+
+# Definición de los servicios que se ejecutarán en contenedores
 services:
+  # Servicio de MariaDB
   mariadb:
-    container_name: mariadb
-    image: mariadb
+    container_name: mariadb  # Nombre del contenedor para identificarlo fácilmente
+    image: mariadb           # Imagen base del contenedor, en este caso MariaDB
     networks:
-    - inception
-    build: ./requirements/mariadb
+      - inception            # Conectar este servicio a la red 'inception'
+    build: ./requirements/mariadb  # Ruta al Dockerfile para construir la imagen
     env_file: 
-    - .env
+      - .env                 # Archivo con variables de entorno para el contenedor
     volumes:
-    - mariadb_data:/var/lib/mysql
-    restart: always
+      - mariadb_data:/var/lib/mysql  # Montar volumen persistente para los datos de la base de datos
+    restart: always           # Reiniciar el contenedor automáticamente si falla
     expose:
-    - "3306"
+      - "3306"                # Exponer el puerto 3306 para la comunicación entre servicios
 
+  # Servicio de WordPress
   wordpress:
-    container_name: wordpress
-    image: wordpress
+    container_name: wordpress  # Nombre del contenedor para el servicio de WordPress
+    image: wordpress            # Imagen base del contenedor, en este caso WordPress
     depends_on:
-      - mariadb
+      - mariadb                 # Asegurarse de que el contenedor de MariaDB se inicie antes que este
     networks:
-    - inception
-    build: ./requirements/wordpress
+      - inception               # Conectar este servicio a la red 'inception'
+    build: ./requirements/wordpress  # Ruta al Dockerfile para construir la imagen de WordPress
     env_file: 
-    - .env
+      - .env                    # Archivo con variables de entorno para el contenedor
     volumes:
-    - wordpress_data:/var/www/html
-    restart: always
+      - wordpress_data:/var/www/html  # Montar volumen persistente para los archivos de WordPress
+    restart: always             # Reiniciar el contenedor automáticamente si falla
     expose: 
-    - "9000"
-  
+      - "9000"                  # Exponer el puerto 9000 para la comunicación con PHP-FPM
+
+  # Servicio de Nginx
   nginx:
-    container_name: nginx
-    image: nginx
+    container_name: nginx       # Nombre del contenedor para el servicio Nginx
+    image: nginx                # Imagen base del contenedor, en este caso Nginx
     depends_on:
-      - wordpress
+      - wordpress                # Asegurarse de que el contenedor de WordPress se inicie antes que este
     networks:
-    - inception
-    build: ./requirements/nginx
+      - inception                # Conectar este servicio a la red 'inception'
+    build: ./requirements/nginx  # Ruta al Dockerfile para construir la imagen de Nginx
     volumes:
-    - wordpress_data:/var/www/html
-    restart: always
+      - wordpress_data:/var/www/html  # Montar volumen persistente para acceder a los archivos de WordPress
+    restart: always              # Reiniciar el contenedor automáticamente si falla
     ports: 
-    - "443:443"
+      - "443:443"                # Exponer el puerto 443 para HTTPS en el host
 
-
+# Definición de volúmenes persistentes para almacenamiento de datos
 volumes:
   mariadb_data:
-    name: mariadb_data
-    driver: local
+    name: mariadb_data         # Nombre del volumen persistente para MariaDB
+    driver: local              # Tipo de driver del volumen, en este caso 'local'
     driver_opts:
-      type: none
-      device: "/home/vpeinado/data/mariadb"
-      o: bind
+      type: none                # Tipo de dispositivo
+      device: "/home/victor/data/mariadb"  # Ruta en el host donde se almacenarán los datos de MariaDB
+      o: bind                   # Opción de montaje (bind mount), el contenedor tiene acceso directo a los archivos
+
   wordpress_data:
-    name: wordpress_data
-    driver: local
+    name: wordpress_data        # Nombre del volumen persistente para WordPress
+    driver: local               # Tipo de driver del volumen, en este caso 'local'
     driver_opts:
-      type: none
-      device: "/home/vpeinado/data/wordpress"
-      o: bind
+      type: none                # Tipo de dispositivo
+      device: "/home/victor/data/wordpress"  # Ruta en el host donde se almacenarán los archivos de WordPress
+      o: bind                   # Opción de montaje (bind mount) 
+
