@@ -61,7 +61,7 @@ volumes:
     driver: local              # Tipo de driver del volumen, en este caso 'local'
     driver_opts:
       type: none                # Tipo de dispositivo
-      device: "/home/victor/data/mariadb"  # Ruta en el host donde se almacenarán los datos de MariaDB
+      device: "/home/vpeinado/data/mariadb"  # Ruta en el host donde se almacenarán los datos de MariaDB
       o: bind                   # Opción de montaje (bind mount), el contenedor tiene acceso directo a los archivos
 
   wordpress_data:
@@ -69,6 +69,6 @@ volumes:
     driver: local               # Tipo de driver del volumen, en este caso 'local'
     driver_opts:
       type: none                # Tipo de dispositivo
-      device: "/home/victor/data/wordpress"  # Ruta en el host donde se almacenarán los archivos de WordPress
+      device: "/home/vpeinado/data/wordpress"  # Ruta en el host donde se almacenarán los archivos de WordPress
       o: bind                   # Opción de montaje (bind mount) 
 
