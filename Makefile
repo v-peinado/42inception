@@ -1,6 +1,6 @@
 SRC_PATH := ./srcs/
 DOCKERCOMP := docker-compose.yml
-LOC_VOLUME := /home/vpeinado/data/
+LOC_VOLUME := /home/victor/data/
 DATA_DB := $(LOC_VOLUME)mariadb
 DATA_WP:=$(LOC_VOLUME)wordpress
 
