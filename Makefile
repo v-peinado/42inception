@@ -1,8 +1,8 @@
 SRC_PATH := ./srcs/
 DOCKERCOMP := docker-compose.yml
-LOC_VOLUME := /home/victor/data/
-DATA_DB := $(LOC_VOLUME)mariadb/*
-DATA_WP:=$(LOC_VOLUME)wordpress/*
+LOC_VOLUME := /home/vpeinado/data/
+DATA_DB := $(LOC_VOLUME)mariadb
+DATA_WP:=$(LOC_VOLUME)wordpress
 
 BUILD := docker compose -f $(SRC_PATH)$(DOCKERCOMP) up -d --build
 STOP := docker compose -f $(SRC_PATH)$(DOCKERCOMP) stop
@@ -10,6 +10,16 @@ START := docker compose -f $(SRC_PATH)$(DOCKERCOMP) start
 DOWN := docker compose -f $(SRC_PATH)$(DOCKERCOMP) down -v
 
 all:
+	@echo "Verificando si existen los directorios $(DATA_DB) y $(DATA_WP)..."
+	@if [ ! -d "$(DATA_DB)" ]; then \
+		echo "Creando directorio para MariaDB: $(DATA_DB)"; \
+		mkdir -p $(DATA_DB); \
+	fi
+	@if [ ! -d "$(DATA_WP)" ]; then \
+		echo "Creando directorio para WordPress: $(DATA_WP)"; \
+		mkdir -p $(DATA_WP); \
+	fi
+	@echo "Directorios verificados."
 	$(BUILD)
 
 stop: 

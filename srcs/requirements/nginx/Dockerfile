@@ -19,8 +19,8 @@ RUN apt update && \
     openssl req -x509 -nodes -days 365 -newkey rsa:4096 -out /etc/nginx/ssl/vpeinado.42.fr.crt -keyout /etc/nginx/ssl/vpeinado.42.fr.key -subj "/C=ES/ST=MADRID/L=MADRID/O=42/OU=42/CN=vpeinado.42.fr" && \
     mkdir -p /var/run/nginx
 
-# Copia el archivo de configuración nginx.conf desde el directorio local conf hacia el contenedor en /etc/nginx/nginx.conf
-COPY conf/nginx.conf /etc/nginx/nginx.conf
+# Copia el archivo de configuración de Nginx, especificado en el archivo nginx.conf, al directorio /etc/nginx/conf.d/
+COPY conf/nginx.conf /etc/nginx/conf.d/nginx.conf
 
 # Cambia los permisos del directorio /var/www/html para permitir lectura y ejecución para todos los usuarios, pero escritura solo para el propietario
 # y cambia el propietario y grupo del directorio /var/www/html a www-data, el usuario que utiliza Nginx
