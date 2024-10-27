@@ -18,10 +18,12 @@ def setup_wordpress():
         # Descargar WordPress
         run_command("wp core download --allow-root", "Error al descargar WordPress")
 
-        # Crear el archivo de configuración wp-config.php
+        # Crear el archivo de configuración wp-config.php, con comando de WordPress-CLI, cliente de WordPress
+        #f-string es una cadena de texto formateada que permite incluir variables en la cadena
+        # es un comando largo, con muchas opciones, se puede dividir en varias líneas para mejorar la legibilidad
         run_command(
             f"wp config create --dbname={os.getenv('DB_NAME')} "
-            f"--dbuser={os.getenv('DB_USER')} "
+            f"--dbuser={os.getenv('DB_USER')} " 
             f"--dbpass={os.getenv('DB_USER_PWD')} "
             f"--dbhost={os.getenv('DB_HOSTNAME')} --allow-root",
             "Error al crear wp-config.php"

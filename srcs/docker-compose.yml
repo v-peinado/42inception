@@ -2,8 +2,8 @@
 networks:
   # Nombre de la red que se utilizará para conectar los servicios
   inception:
-    name: inception  # Nombre amigable para la red
-    driver: bridge    # Tipo de driver de la red, en este caso 'bridge'
+    name: inception  # Nombre de la red
+    driver: bridge    # Tipo de driver de la red, en este caso 'bridge', que permite la comunicación entre contenedores en el mismo host
 
 # Definición de los servicios que se ejecutarán en contenedores
 services:
@@ -49,7 +49,7 @@ services:
       - inception                # Conectar este servicio a la red 'inception'
     build: ./requirements/nginx  # Ruta al Dockerfile para construir la imagen de Nginx
     volumes:
-      - wordpress_data:/var/www/html  # Montar volumen persistente para acceder a los archivos de WordPress
+      - wordpress_data:/var/www/html  # Montar volumen persistente para acceder a los archivos de WordPress, se ubican en el directorio /var/www/html en el contenedor
     restart: always              # Reiniciar el contenedor automáticamente si falla
     ports: 
       - "443:443"                # Exponer el puerto 443 para HTTPS en el host
@@ -60,8 +60,8 @@ volumes:
     name: mariadb_data         # Nombre del volumen persistente para MariaDB
     driver: local              # Tipo de driver del volumen, en este caso 'local'
     driver_opts:
-      type: none                # Tipo de dispositivo
-      device: "/home/vpeinado/data/mariadb"  # Ruta en el host donde se almacenarán los datos de MariaDB
+      type: none                # Tipo de dispositivo, se montara un directorio del host, no se utilizará un dispositivo
+      device: "/home/victor/data/mariadb"  # Ruta en el host donde se almacenarán los datos de MariaDB
       o: bind                   # Opción de montaje (bind mount), el contenedor tiene acceso directo a los archivos
 
   wordpress_data:
@@ -69,6 +69,6 @@ volumes:
     driver: local               # Tipo de driver del volumen, en este caso 'local'
     driver_opts:
       type: none                # Tipo de dispositivo
-      device: "/home/vpeinado/data/wordpress"  # Ruta en el host donde se almacenarán los archivos de WordPress
+      device: "/home/victor/data/wordpress"  # Ruta en el host donde se almacenarán los archivos de WordPress
       o: bind                   # Opción de montaje (bind mount) 
 

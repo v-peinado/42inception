@@ -1,6 +1,6 @@
 SRC_PATH := ./srcs/
 DOCKERCOMP := docker-compose.yml
-LOC_VOLUME := /home/vpeinado/data/
+LOC_VOLUME := /home/victor/data/
 DATA_DB := $(LOC_VOLUME)mariadb
 DATA_WP:=$(LOC_VOLUME)wordpress
 
@@ -30,6 +30,12 @@ start:
 
 clean: stop
 	$(DOWN)
+
+exec_maria_client:
+	docker exec -it mariadb mysql -u root -p -e "USE inception; SELECT * FROM wp_users;"
+
+exec_nginx:
+	docker exec -it nginx /bin/sh
 
 addhost:
 	@echo "Verificando si '127.0.0.1 vpeinado.42.fr' ya está en /etc/hosts..."

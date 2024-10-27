@@ -2,7 +2,7 @@ FROM debian:bullseye
 # Establece la imagen base como Debian Bullseye.
 
 # Actualiza el índice de los repositorios y actualiza todos los paquetes instalados a la versión más reciente.
-# Instala el servidor de MariaDB en la imagen.
+# Instala el servidor de MariaDB en la imagen. En wordpress se usara el cliente de MariaDB, relacion cliente-servidor.
 RUN apt-get update && apt-get upgrade -y && \
     apt-get install mariadb-server -y
 
@@ -14,8 +14,8 @@ COPY tools/init_mariadb.py /usr/local/bin/init_mariadb.py
 # Copia el script 'init_mariadb.py' desde el directorio local 'tools' al directorio '/usr/local/bin/' en el contenedor.
 
 # Da permisos de ejecución al script 'init_mariadb.py'.
-# Crea el directorio '/var/run/mysqld' donde MariaDB guarda sus archivos de PID y sockets.
-# Cambia el propietario de '/var/run/mysqld' a 'mysql' y establece permisos amplios (777) para el directorio.
+# Crea el directorio '/var/run/mysqld' donde MariaDB guarda sus archivos de PID y sockets. Crea la ruta completa si no existe.
+# Cambia el propietario de '/var/run/mysqld' a 'mysql' y establece permisos amplios (777) para el directorio. -R indica que el cambio de propietario se aplica recursivamente.
 # Cambia el propietario de los directorios '/tmp' y '/run/mysqld' a 'mysql'. Esto es necesario porque MariaDB usa estos directorios durante su ejecución.
 RUN chmod +x /usr/local/bin/init_mariadb.py && \
     mkdir -p /var/run/mysqld && \
