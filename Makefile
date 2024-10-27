@@ -83,5 +83,26 @@ help:
 	@echo "addhost: Agrega la entrada '127.0.0.1    vpeinado.42.fr' al archivo /etc/hosts."
 	@echo "hardclean: Detiene y elimina todos los contenedores y volúmenes de Docker."
 	@echo "hardreset: Borra el contenido de los directorios de la base de datos y WordPress."
+
+check_access:
+	@echo "Comprobando acceso HTTPS en puerto 443..."
+	@if curl -I -k https://vpeinado.42.fr:443; then \
+		echo "Acceso HTTPS en puerto 443 OK"; \
+	else \
+		echo "Error al acceder a HTTPS en puerto 443"; \
+	fi
+	@echo "Comprobando acceso HTTP en puerto 80..."
+	@if curl -I -k http://vpeinado.42.fr:80; then \
+		echo "Acceso HTTP en puerto 80 OK"; \
+	else \
+		echo "Error al acceder a HTTP en puerto 80"; \
+	fi
+	@echo "Comprobando acceso redirigido en HTTP..."
+	@if curl -I -L http://vpeinado.42.fr; then \
+		echo "Acceso redirigido OK"; \
+	else \
+		echo "Error al acceder a la URL redirigida"; \
+	fi
+
 	
 .PHONY: all stop clean fclean re reset
