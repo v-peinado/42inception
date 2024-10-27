@@ -34,9 +34,6 @@ clean: stop
 exec_maria_client:
 	docker exec -it mariadb mysql -u root -p -e "USE inception; SELECT * FROM wp_users;"
 
-exec_nginx:
-	docker exec -it nginx /bin/sh
-
 addhost:
 	@echo "Verificando si '127.0.0.1 vpeinado.42.fr' ya está en /etc/hosts..."
 	@if ! grep -q -P "127.0.0.1\s+vpeinado.42.fr" /etc/hosts; then \
@@ -83,6 +80,13 @@ help:
 	@echo "addhost: Agrega la entrada '127.0.0.1    vpeinado.42.fr' al archivo /etc/hosts."
 	@echo "hardclean: Detiene y elimina todos los contenedores y volúmenes de Docker."
 	@echo "hardreset: Borra el contenido de los directorios de la base de datos y WordPress."
+	@echo "make_bash: Ejecuta un shell en un contenedor."
+	@echo "check_access: Comprueba el acceso a los servicios HTTP y HTTPS."
+	@echo "exec_maria_client: Ejecuta un cliente MySQL en el contenedor de MariaDB."
+
+make_bash:
+	@read -p "Introduce el nombre del contenedor: " CONTAINER_NAME; \
+	docker exec -it "$$CONTAINER_NAME" /bin/bash
 
 check_access:
 	@echo "Comprobando acceso HTTPS en puerto 443..."
