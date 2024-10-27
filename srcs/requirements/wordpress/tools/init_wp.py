@@ -64,6 +64,7 @@ def setup_wordpress():
     else:
         print("wp-config.php ya existe. Se omite la instalación de WordPress.")
 
+# PHP-FPM (PHP FastCGI Process Manager) es una implementación de PHP que proporciona una manera eficiente de manejar solicitudes PHP a través del protocolo FastCGI.
 def start_php_fpm():
     """Inicia PHP-FPM en primer plano."""
     print("Iniciando PHP-FPM...")
