@@ -83,6 +83,8 @@ help:
 	@echo "make_bash: Ejecuta un shell en un contenedor."
 	@echo "check_access: Comprueba el acceso a los servicios HTTP y HTTPS."
 	@echo "exec_maria_client: Ejecuta un cliente MySQL en el contenedor de MariaDB."
+	@echo "example: Crea un contenedor de ejemplo con un mensaje de bienvenida."
+	@echo "clean_example: Elimina el contenedor de ejemplo y su directorio."
 
 make_bash:
 	@read -p "Introduce el nombre del contenedor: " CONTAINER_NAME; \
@@ -108,5 +110,35 @@ check_access:
 		echo "Error al acceder a la URL redirigida"; \
 	fi
 
+# Directorio y nombre del contenedor de ejemplo
+EXAMPLE_DIR := ./example_container
+EXAMPLE_IMAGE := example_image
+EXAMPLE_CONTAINER := example_container
+
+# Comando para construir el contenedor de ejemplo
+EXAMPLE_BUILD := docker build -t $(EXAMPLE_IMAGE) $(EXAMPLE_DIR)
+
+# Regla para crear el contenedor de ejemplo
+example:
+	@echo "Creando directorio para contenedor de ejemplo: $(EXAMPLE_DIR)"
+	@mkdir -p $(EXAMPLE_DIR)
+	@echo "Escribiendo Dockerfile en $(EXAMPLE_DIR)/Dockerfile"
+	@echo 'FROM debian:bullseye' > $(EXAMPLE_DIR)/Dockerfile
+	@echo 'RUN apt-get update && apt-get install -y curl' >> $(EXAMPLE_DIR)/Dockerfile
+	@echo 'CMD ["echo", "¡Hola desde el contenedor Docker!"]' >> $(EXAMPLE_DIR)/Dockerfile
+	@echo "Construyendo la imagen de ejemplo..."
+	$(EXAMPLE_BUILD)
+	@echo "Ejecutando el contenedor de ejemplo..."
+	docker run --name $(EXAMPLE_CONTAINER) $(EXAMPLE_IMAGE)
+
+# Regla para limpiar el contenedor de ejemplo y su directorio
+clean_example:
+	@echo "Deteniendo y eliminando el contenedor de ejemplo, si existe..."
+	@docker rm -f $(EXAMPLE_CONTAINER) 2>/dev/null || echo "Contenedor $(EXAMPLE_CONTAINER) no está en ejecución."
+	@echo "Eliminando la imagen de ejemplo..."
+	@docker rmi $(EXAMPLE_IMAGE) 2>/dev/null || echo "Imagen $(EXAMPLE_IMAGE) no existe."
+	@echo "Eliminando el directorio $(EXAMPLE_DIR)..."
+	@rm -rf $(EXAMPLE_DIR)
+	@echo "Limpieza de contenedor de ejemplo completada."
 	
-.PHONY: all stop clean fclean re reset
+.PHONY: all stop clean fclean re reset example clean_example make_bash check_access exec_maria_client addhost hardclean hardreset
