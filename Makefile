@@ -125,11 +125,16 @@ example:
 	@echo "Escribiendo Dockerfile en $(EXAMPLE_DIR)/Dockerfile"
 	@echo 'FROM debian:bullseye' > $(EXAMPLE_DIR)/Dockerfile
 	@echo 'RUN apt-get update && apt-get install -y curl' >> $(EXAMPLE_DIR)/Dockerfile
-	@echo 'CMD ["echo", "¡Hola desde el contenedor Docker!"]' >> $(EXAMPLE_DIR)/Dockerfile
+	@echo 'CMD ["echo", "¡Hola desde el CMD predeterminado!"]' >> $(EXAMPLE_DIR)/Dockerfile
 	@echo "Construyendo la imagen de ejemplo..."
 	$(EXAMPLE_BUILD)
-	@echo "Ejecutando el contenedor de ejemplo..."
-	docker run --name $(EXAMPLE_CONTAINER) $(EXAMPLE_IMAGE)
+	@echo "Eliminando cualquier contenedor existente llamado $(EXAMPLE_CONTAINER)..."
+	@docker rm -f $(EXAMPLE_CONTAINER) 2>/dev/null || true
+	@echo "Ejecutando el contenedor de ejemplo con el CMD predeterminado..."
+	docker run --rm --name $(EXAMPLE_CONTAINER) $(EXAMPLE_IMAGE)
+	@echo "Sobreescribiendo el CMD para este contenedor..."
+	docker run --rm --name $(EXAMPLE_CONTAINER) $(EXAMPLE_IMAGE) echo "¡CMD ha sido sobrescrito!"
+	@echo "El contenedor se cierrra porque el proceso ha terminado, usando tail -f /dev/null se crea un contendedor que se mantiene en ejecución."
 
 # Regla para limpiar el contenedor de ejemplo y su directorio
 clean_example:
